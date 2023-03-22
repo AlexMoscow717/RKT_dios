@@ -256,7 +256,7 @@ struct time_clock_main
 };
 
 
-const char name1[] PROGMEM = "Pressure On/Off";  // Каждое имя в своей строке, символ переноса не нужен
+const char name1[] PROGMEM = "Pressure On/Off";  // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 const char name2[] PROGMEM = "Temp Delta";
 const char name3[] PROGMEM = "Valve On/Off";
 const char name4[] PROGMEM = "void";
@@ -364,19 +364,19 @@ ISR(TIMER1_A)
 
 ISR(USART_UDRE_vect)
 {
-	buff_index_tx++;													// Увеличиваем индекс
+	buff_index_tx++;													// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	
-	if((usartBufferTX[buff_index_tx] == '$')||(buff_index_tx == BUFF_TX_SIZE))							// Вывели весь буффер?
+	if((usartBufferTX[buff_index_tx] == '$')||(buff_index_tx == BUFF_TX_SIZE))							// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ?
 	{
 		USART_UDRE_INT_OFF
 		buff_index_tx = 0;
 		USART_TX_INT_ON
-		// Запрещаем прерывание по опустошению - передача закончена
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	}
 	else
 	{
 		UDR0 = usartBufferTX[buff_index_tx];
-		usartBufferTX[buff_index_tx] = 0;							// Берем данные из буффера.
+		usartBufferTX[buff_index_tx] = 0;							// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 	}
 	
 
@@ -447,9 +447,9 @@ void setup()
 	barometr.begin();
 	barometr.oneMeasurement();
 	
-	btn_main_clk.setDebounce(20);        // настройка антидребезга (по умолчанию 80 мс)
-	btn_main_clk.setTimeout(600);        // настройка таймаута на удержание (по умолчанию 500 мс)
-	btn_main_clk.setClickTimeout(150);   // настройка таймаута между кликами (по умолчанию 300 мс)
+	btn_main_clk.setDebounce(20);        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 80 пїЅпїЅ)
+	btn_main_clk.setTimeout(600);        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 500 пїЅпїЅ)
+	btn_main_clk.setClickTimeout(150);   // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 300 пїЅпїЅ)
 	
 	
 	for (int i = 0; i < BUFF_TX_SIZE ; i++)
@@ -1619,11 +1619,11 @@ void taskControllTemperature(void)
 void printFromPGM(int charMap)
 {
 	uint16_t ptr = pgm_read_word(charMap);
-	    // получаем адрес из таблицы ссылок
+	    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	while (pgm_read_byte(ptr) != NULL)
-	{      // всю строку до нулевого символа
-		lcd.print(char(pgm_read_byte(ptr)));    // выводим в монитор или куда нам надо
-		ptr++;                                  // следующий символ
+	{      // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		lcd.print(char(pgm_read_byte(ptr)));    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+		ptr++;                                  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	}
 }
 
@@ -1659,7 +1659,7 @@ void taskEncScanRotary(void)
 			//Serial.print("R");
 			 valueEnc += 0.1;
 			 //pressure += 1;	
-		}						// если был поворот направо, увеличиваем на 1
+		}						// пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ 1
 		//encMain.tick();
 		if (encMain.isLeft())
 		{
@@ -1841,6 +1841,12 @@ void task_compare_different_pressure(void)
 
 
 
+void test1(void)
+{
+	//////////////////////////////
+}
+
+
 // void FREE_RAM_TEST(void)
 // {
 // 	RAM_SIZE = memoryFree();
@@ -1856,7 +1862,7 @@ void task_compare_different_pressure(void)
 
 //extern int __bss_end;
 //extern void *__brkval;
-// Функция, возвращающая количество свободного ОЗУ
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
 // int memoryFree() {
 // 	int freeValue;
 // 	if ((int)__brkval == 0)
