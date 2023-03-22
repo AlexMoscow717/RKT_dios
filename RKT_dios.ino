@@ -14,84 +14,82 @@
 #define PIN_DEBUG 15
 #define PIN_WATER_VALVE 13
 #define WATER_SUPPLY_DELTA 1
-
+//#define roundM(x) ((x)>=0?(float)((x)+0.001):(float)((x)-0.001))
 #define ON_OUT 1
 #define OFF_OUT 0
 
 #define CLK 8
 #define DT 9
 //#define SW 12
+////////////////////////////FLAGS//////////////////////////////////////////////////////
+#define F_PRINT_ON_OFF_VALVE_CTRL 1
+#define F_LOCK_TEMP_FIXED_OUT_LCD 2
+#define F_TEMP_OUT_OF_RANGE 3
+#define FLAG_FIRST_USE_VALVE_ON 4
+#define F_ACTIVATION_PROC_CONTROLL_TEMP 5
+#define F_CHANGE_DELTA_UP 6
+#define F_VALVE_ON_OFF 7
+#define F_TEMP_OUT_OF_RANGE_DOUBLE 8
+#define F_PRINT_GUI_MAIN_ONE_USE 9
+#define F_PRINT_PICTOGRAM_ONE_USE_TRUE 10
+#define F_PRINT_PICTOGRAM_ONE_USE_FALSE 11
+#define F_LATCH_PRINT_POWER_SET 12
+#define F_PRINT_ON_OFF_PRESS_TEMP_CTRL 13
+#define F_ACTIVATE_PRESS_CTRL_SYS 14
+///////////////////////////FLAGS////////////////////////////////////////////////////////
 
-#define F_PRINT_ON_OFF_VALVE_CNTL 1
-#define FLAG_CLICKED_BTN 2
-#define FLAG_DELTA_INCREMENT 3
-#define FLAG_ONE_USE_VALVE_ON 7
 
-#define F_CHANGE_DELTA_UP 10
-#define F_VALVE_ON_OFF 11
-#define F_BUZZER_ON_OFF 14
-#define F_BZR_TIMER_START_STOP 15
-#define F_BZR_ALTERNATIVE 16
-#define F_PRINT_GUI_MAIN_ONE_USE 17
-#define F_PRINT_PICTOGRAM_ONE_USE_TRUE 18
-#define F_PRINT_PICTOGRAM_ONE_USE_FALSE 19
-#define F_LATCH_W_VALVE_1 20
-#define F_LATCH_W_VALVE_2 21
-#define F_LATCH_TEMP_CTRL_BZR_1 22
-#define F_LATCH_TEMP_CTRL_BZR_2 23
-#define F_ENABLE_TIMER_30_S 24
-#define F_END_TIME_30_S 25
-#define F_LATCH_ON_OFF_TIMER_15_S 26
-#define F_LATCH_RESET_TIMER_15_S 27
-#define F_LATCH_PRINT_POWER_SET 28
-#define F_ACTIVATION_PROC_CONTROLL_TEMP 9
-#define F_TEMP_OUT_OF_RANGE 6
-#define F_TEMP_OUT_OF_RANGE_DOUBLE 12
-#define F_SD_CARD_ON_OFF_LOGGING 13
-#define EMERGENCY_TEMP_MAIN 95
-#define TIME_TIMER_S 9
 
-#define LOCK_PROC_BTN_MNG 4
-#define LOCK_TEMP_FIXED_OUT_LCD 5
-#define LOCK_CLICK_FIXED_TEMP_IN_MENU 8
 
-#define TEMP_MAX_VALUE_ALARM_BUZZ 90
-#define TEMP_MIN_VALUE_ALARM_BUZZ 50
-#define TEMP_STEP_CHANGE_ALARM_BUZZ 2
+//#define F_SD_CARD_ON_OFF_LOGGING 13
+//#define FLAG_CLICKED_BTN 2
+//#define FLAG_DELTA_INCREMENT 3
 
+//#define F_BUZZER_ON_OFF 14
+//#define F_BZR_TIMER_START_STOP 15
+//#define F_BZR_ALTERNATIVE 16
+
+//#define F_LATCH_W_VALVE_1 20
+//#define F_LATCH_W_VALVE_2 21
+//#define F_LATCH_TEMP_CTRL_BZR_1 22
+//#define F_LATCH_TEMP_CTRL_BZR_2 23
+//#define F_ENABLE_TIMER_30_S 24
+//#define F_END_TIME_30_S 25
+//#define F_LATCH_ON_OFF_TIMER_15_S 26
+//#define F_LATCH_RESET_TIMER_15_S 27
+
+//#define EMERGENCY_TEMP_MAIN 95
+//#define TIME_TIMER_S 9
+//#define LOCK_PROC_BTN_MNG 4
+
+//#define LOCK_CLICK_FIXED_TEMP_IN_MENU 8
 #define POWER_LEVEL_MIN 40
 #define POWER_LEVEL_MAX 230
 // #define POWER_LEVEL_MIN 100
 // #define POWER_LEVEL_MAX 3310
 #define POWER_LEVEL_CHANGED_STEP 5
-
 #define DELAY_MAX_VALUE_OPEN_VALVE 60
 #define DELAY_MIN_VALUE_OPEN_VALVE 1
 #define DELAY_LOW_STEP_CHANGE_OPEN_VALVE 1
 #define DELAY_MID_STEP_CHANGE_OPEN_VALVE 5
 #define DELAY_HIGH_STEP_CHANGE_OPEN_VALVE 15
-#define NUMBER_OF_MODES 4
-#define DELTA_MODE 3
-#define MODE_SOUND 1
-#define MODE_MUTE 0
-#define MODE_START_STOP 2
+//#define NUMBER_OF_MODES 4
+//#define DELTA_MODE 3
+//#define MODE_SOUND 1
+//#define MODE_MUTE 0
+//#define MODE_START_STOP 2
 #define LINES_DISPLAY 4
 #define ITEMS_MENU 7
 #define ZERO_ITEM_MENU 2
-
-
-
 #define MAIN_LOCATION 0
 #define MENU_LOCATION 1
-#define TEMP_BUZZ_LOCATION 2
+#define PRESSURE_CONTROL_LOCATION 2
 #define DELTA_LOCATION 3
 #define VALVE_LOCATION 4
-#define BUZZER_ON_OFF_LOCATION 5
+//#define BUZZER_ON_OFF_LOCATION 5
 #define TIME_DELAY_OPEN_VALVE_LOCATION 6
 #define SET_POWER_SUPPLY_LEVEL_LOCATION 7
 #define EXIT_MENU_LOCATION 8
-
-
 #define BUFF_TX_SIZE 16
 #define BUFF_RX_SIZE 10
 #define USART_RX_INT_ON UCSR0B|=(1<<RXCIE0);
@@ -108,12 +106,6 @@
 #define MODE_VOL_OUT 1
 #define RESIST_TEN 16.7
  
-
-
-
-
-
-
 // #include <SPI.h>
 // #include <SD.h>
 //#include <ArduRTOS.h>
@@ -129,49 +121,48 @@
 #include <GyverWDT.h>
 #include <microLiquidCrystal_I2C.h>
 #include <GyverEncoder.h>
-#include <C:\Arduino\hardware\arduino\avr\libraries\EEPROM\src\EEPROM.h>
+#include <eeprom.h>
+// #include <C:\Arduino\hardware\arduino\avr\libraries\EEPROM\src\EEPROM.h>
 #include <GyverBME280.h>
-
-
-
-
 
 float getTempMainFiltered = 0;
 float getTempInfoFiltered = 0;
 float getTempWaterFiltered = 0;
-float boiling_point_of_alcohol = 0;
+//float boiling_point_of_alcohol = 0;
 
 float* ptrTempMainFiltered = nullptr;
 float* ptrTempInfoFiltered = nullptr;
 float* ptrTempWaterFiltered = nullptr;
-float* ptrBoiling_point_of_alcohol = nullptr;
+//float* ptrBoiling_point_of_alcohol = nullptr;
+float* ptrPressure = nullptr;
 float* ptrValueEnc = nullptr;
 
-byte value_press_btn = 0;
-uint8_t mode_work_pointer = 0;
+//byte value_press_btn = 0;
+//uint8_t mode_work_pointer = 0;
 uint8_t display_modes = 0;
 float delta = 0.05;
 float delta_set = 0.05;
 float threshold = 0;
-float pressure = 0;
+float pressureATM = 0;
+float different_pressure = 0;
+float temp_correct_fixed_by_press = 0;
+float* ptr_diff_press = nullptr;
+float* ptr_current_press_main_fixed = nullptr;
+float* ptr_temp_correct_fixed_by_press = nullptr;
+float* ptr_tmp_diff_press = nullptr;
 
-int RAM_SIZE;
-
+//int RAM_SIZE;
 //byte mode_global = 0;
-
-
 byte location = 0;
-byte bzr_mng_adm = 0;
+//byte bzr_mng_adm = 0;
 byte pointer_menu = ZERO_ITEM_MENU;
-byte water_supply_alarm_temp = TEMP_MIN_VALUE_ALARM_BUZZ;
-byte water_supply_alarm_temp_set = TEMP_MIN_VALUE_ALARM_BUZZ;
 byte voltage_level = POWER_LEVEL_MIN;
 byte voltage_level_set = POWER_LEVEL_MIN;
 int power_level;
 uint16_t delay_open_valve = 1;
 uint16_t delay_open_valve_set = 1;
 boolean valve_state = true;
-boolean buzzer_state = true;
+boolean press_temp_state = false;
 //String dataLogString = "";
 
 volatile char usartBufferTX[BUFF_TX_SIZE];
@@ -184,12 +175,21 @@ volatile byte index_arr_reverse_fnc = 0;
 
 int* ptr_power_level = &power_level;
 byte* ptr_voltage_level_set = &voltage_level_set;
-
-
-
-float valueEnc = 0;
+float valueEnc = 730;
 // float valueEncTest = 22;
 float current_temp_main_fixed = 0;
+float current_press_main_fixed = 0;
+float tmp_diff_press = 0;
+
+
+
+ float tempMain = 0;
+ float tempInfo = 0;
+ float tempWater = 0;
+//static float tempBoilAlc = *ptrBoiling_point_of_alcohol;
+ float Pressure_local = 0;
+//static float tempValueEnc = *ptrValueEnc;
+ byte hour,minute,second = 0;
 
 byte customCharDeltaL[8] = {
 	0b00000,
@@ -201,7 +201,6 @@ byte customCharDeltaL[8] = {
 	0b01110,
 	0b11111
 };
-
 
 byte customCharCelsium[8] = {
 	0b01000,
@@ -253,14 +252,14 @@ struct time_clock_main
 	volatile unsigned char minute;
 	volatile unsigned char hours;
 // 	volatile unsigned char timer30m = 30;
-	volatile unsigned char timer30s = TIME_TIMER_S;
+	//volatile unsigned char timer30s = TIME_TIMER_S;
 };
 
 
-const char name1[] PROGMEM = "Temp Open Water";  // Каждое имя в своей строке, символ переноса не нужен
+const char name1[] PROGMEM = "Pressure On/Off";  // Каждое имя в своей строке, символ переноса не нужен
 const char name2[] PROGMEM = "Temp Delta";
 const char name3[] PROGMEM = "Valve On/Off";
-const char name4[] PROGMEM = "Buzzer On/Off";
+const char name4[] PROGMEM = "void";
 const char name5[] PROGMEM = "Delay Open Valve";
 const char name6[] PROGMEM = "Set Power Level";
 const char name7[] PROGMEM = "Exit Menu";
@@ -300,17 +299,12 @@ GyverBME280 barometr;
 //Sd2Card card;
 
 GButton btn_main_clk(PIN_BTN_MAIN);
-// GButton btn_switch_modeR(PIN_BTN_SW_MODE_R);
-// GButton btn_switch_modeL(PIN_BTN_SW_MODE_L);
-
 Encoder encMain(CLK,DT,TYPE1);
 
 GKalman filterTempMain(0.08,0.75);
 GKalman filterTempInfo(0.08,0.75);
 GKalman filterTempWater(0.08,0.75);
-
 GTimer oneTimer(MS);
-
 QuickIO digital_pin_relay = PIN_RELAY;
 QuickIO digital_pin_debug = PIN_DEBUG;
 QuickIO digital_pin_buzzer = PIN_BUZZER;
@@ -318,7 +312,7 @@ QuickIO digital_pin_water_valve = PIN_WATER_VALVE;
 
 LiquidCrystal_I2C lcd(0x27, 20, 4);
 
-BitPack <28> flags;
+BitPack <14> flags;
 
 time_clock_main time_local;
 
@@ -347,23 +341,23 @@ ISR(TIMER1_A)
 			}
 		}
 	}
-	if (flags.read(F_ENABLE_TIMER_30_S))
-	{
-		flags.clear(F_LATCH_RESET_TIMER_15_S);
-		if (--ptr_struct_time->timer30s == 0)
-		{
-			flags.clear(F_ENABLE_TIMER_30_S);
-			flags.set(F_END_TIME_30_S);
-			ptr_struct_time->timer30s = TIME_TIMER_S;
-			
-			
-			
-// 			if (--t.timer30m == 0)
-// 			{
-// 				t.timer30m = 0;
-// 			}
-		}
-	}
+// 	if (flags.read(F_ENABLE_TIMER_30_S))
+// 	{
+// 		//flags.clear(F_LATCH_RESET_TIMER_15_S);
+// 		if (--ptr_struct_time->timer30s == 0)
+// 		{
+// 			flags.clear(F_ENABLE_TIMER_30_S);
+// 			flags.set(F_END_TIME_30_S);
+// 			ptr_struct_time->timer30s = TIME_TIMER_S;
+// 			
+// 			
+// 			
+// // 			if (--t.timer30m == 0)
+// // 			{
+// // 				t.timer30m = 0;
+// // 			}
+// 		}
+// 	}
 	
 	
 }
@@ -412,7 +406,6 @@ ISR(USART_RX_vect)
 	buff_index_rx++;
 }
 
-
 void setup()
 {
 	
@@ -422,7 +415,7 @@ void setup()
 	digital_pin_debug.mode(OUTPUT);
 	digital_pin_water_valve.mode(OUTPUT);
 	
-	digital_pin_relay.write(ON_OUT);
+	digital_pin_relay.write(OFF_OUT);
 	digital_pin_water_valve.write(OFF_OUT);
 	
 	lcd.init();
@@ -434,8 +427,8 @@ void setup()
 	EEPROM.get(4,delay_open_valve);
 	EEPROM.get(6,delay_open_valve_set);
 	
-	EEPROM.get(8,water_supply_alarm_temp);
-	EEPROM.get(9,water_supply_alarm_temp_set);
+	//EEPROM.get(8,);
+	//EEPROM.get(9,);
 	
 	Timer1.setFrequency(1);
 	Timer1.enableISR();
@@ -449,12 +442,15 @@ void setup()
 	sensorTempWater.setResolution(12);
 	barometr.setMode(FORCED_MODE);
 	barometr.setPressOversampling(OVERSAMPLING_16);
+	barometr.setHumOversampling(MODULE_DISABLE);
+	//barometr.setTempOversampling(MODULE_DISABLE);
 	barometr.begin();
+	barometr.oneMeasurement();
 	
 	btn_main_clk.setDebounce(20);        // настройка антидребезга (по умолчанию 80 мс)
 	btn_main_clk.setTimeout(600);        // настройка таймаута на удержание (по умолчанию 500 мс)
 	btn_main_clk.setClickTimeout(150);   // настройка таймаута между кликами (по умолчанию 300 мс)
-	barometr.oneMeasurement();
+	
 	
 	for (int i = 0; i < BUFF_TX_SIZE ; i++)
 	{
@@ -469,8 +465,10 @@ void setup()
 	ptrTempWaterFiltered = &getTempWaterFiltered;
 	ptrTempMainFiltered = &getTempMainFiltered;
 	ptrTempInfoFiltered = &getTempInfoFiltered;
-	ptrBoiling_point_of_alcohol = &boiling_point_of_alcohol;
+	//ptrBoiling_point_of_alcohol = &boiling_point_of_alcohol;
+	ptrPressure = &pressureATM;
 	//ptrValueEnc = &valueEnc;
+	ptr_temp_correct_fixed_by_press = &temp_correct_fixed_by_press;
 	//digital_pin_relay.write(ON_OUT);
 	//Serial.begin(9600);
 	
@@ -499,11 +497,12 @@ void setup()
 	//SetTask(buttonMNGmodes);
 	
 	
-	QueueMain.push_back(bzrMng);
+	//QueueMain.push_back(bzrMng);
 	QueueMain.push_back(taskMainProcess);
 	QueueMain.push_back(taskControllTemperature);
 	QueueMain.push_back(pressureComputing);
-	QueueMain.push_back(task_Ctrl_Water_Valve_System);
+	//QueueMain.push_back(task_Ctrl_Water_Valve_System);
+	
 	//QueueMain.push_back(task_buzzer_mng);
 	//QueueMain.push_back(FREE_RAM_TEST);
 	
@@ -518,6 +517,10 @@ void setup()
 	lcd.createChar(4, customCharRelayStateON);
 	powerCalculate();
 	
+	ptr_diff_press = &different_pressure;
+	ptr_current_press_main_fixed = &current_press_main_fixed;
+	ptr_tmp_diff_press = &tmp_diff_press;
+	
 }
 
 void loop()
@@ -529,20 +532,19 @@ void loop()
 		}
 }
 
-
 void pressureComputing(void)
 {
+	//barometr.begin();
 	if (!barometr.isMeasuring())
 	{
-		pressure = pressureToMmHg(barometr.readPressure());
-		
-		boiling_point_of_alcohol = (float)(0.038 * pressure) + 49.27;
-		
+		*ptrPressure = (float)((int)((pressureToMmHg(barometr.readPressure())) * 10) % 10000) / 10;
+		//boiling_point_of_alcohol = (float)(0.038 * pressure) + 49.27;
 		barometr.oneMeasurement();
 	}
 	
 	
-	SetTimerTask(pressureComputing,7000);
+	
+	SetTimerTask(pressureComputing,1000);
 }
 
 void taskRequestTempMain(void)
@@ -560,7 +562,8 @@ void taskGetTempMain(void)
 	//getTempMain1 = sensorTempMain.getTemp();
 	
 	//SetTimerTask(taskRequestGetTempMain1,900);
-	getTempMainFiltered = filterTempMain.filtered(sensorTempMain.getTemp());
+	//getTempMainFiltered = filterTempMain.filtered(sensorTempMain.getTemp());
+	getTempMainFiltered = (float)((int)((filterTempMain.filtered(sensorTempMain.getTemp())) * 100) % 10000) / 100;
 	QueueMain.push_back(taskRequestTempMain);
 	
 }
@@ -577,7 +580,7 @@ void taskRequestTempInfo(void)
 void taskGetTempInfo(void)
 {
 	
-	getTempInfoFiltered = filterTempInfo.filtered(sensorTempInfo.getTemp());
+	getTempInfoFiltered = (filterTempInfo.filtered(sensorTempInfo.getTemp())) + 0.19;
 	
 	
 	QueueMain.push_back(taskRequestTempInfo);
@@ -629,9 +632,9 @@ void taskMainProcess(void)
 				break;
 
 
-				case TEMP_BUZZ_LOCATION :{
-											printGUITempBuzzAlarmLocation();
-											buttonControllTempBuzzAlarmLocation();
+				case PRESSURE_CONTROL_LOCATION :{
+											print_GUI_PressureControl_Location();
+											btn_Ctrl_Pressure_Location();
 										 }
 
 				break;
@@ -653,12 +656,12 @@ void taskMainProcess(void)
 				break;
 
 
-				case BUZZER_ON_OFF_LOCATION :{
-												printGUIBuzzerOnOffLocation();
-												buttonControllBuzzerOnOffLocation();
-											 }
+				//case BUZZER_ON_OFF_LOCATION :{
+												//printGUIBuzzerOnOffLocation();
+												///buttonControllBuzzerOnOffLocation();
+											// }
 
-				break;
+				//break;
 
 				case TIME_DELAY_OPEN_VALVE_LOCATION :{
 															printGUIDelayOpenValveLocation();
@@ -703,10 +706,26 @@ void buttonControllMainLoc(void)
 	if (btn_main_clk.isClick())
 	{
 		current_temp_main_fixed = getTempMainFiltered;
+		
+		if (flags.read(F_ACTIVATE_PRESS_CTRL_SYS))
+		{
+			if (press_temp_state)
+			{
+				current_press_main_fixed = *ptrPressure;
+				QueueMain.push_back(task_compare_different_pressure);
+				
+			}
+		}
+		
+		
+		
 		//current_temp_main_fixed = valueEnc;
 		flags.set(F_ACTIVATION_PROC_CONTROLL_TEMP);
-		flags.set(LOCK_TEMP_FIXED_OUT_LCD);
+		flags.set(F_LOCK_TEMP_FIXED_OUT_LCD);
 		flags.clear(F_TEMP_OUT_OF_RANGE);
+		
+		
+		
 	}
 }
 
@@ -715,155 +734,165 @@ void printGUImainLocation(void)
 	
 	//digital_pin_debug.write(ON_OUT);
 	
-	static float tempMain = *ptrTempMainFiltered;
-	static float tempInfo = *ptrTempInfoFiltered;
-	static float tempWater = *ptrTempWaterFiltered;
-	static float tempBoilAlc = *ptrBoiling_point_of_alcohol;
-	//static float tempValueEnc = *ptrValueEnc;
-	static byte hour,minute,second = 0;
+// 	static float tempMain = *ptrTempMainFiltered;
+// 	static float tempInfo = *ptrTempInfoFiltered;
+// 	static float tempWater = *ptrTempWaterFiltered;
+// 	//static float tempBoilAlc = *ptrBoiling_point_of_alcohol;
+// 	static float Pressure_local = *ptrPressure;
+// 	//static float tempValueEnc = *ptrValueEnc;
+// 	static byte hour,minute,second = 0;
+
+//tempMain = *ptrTempMainFiltered;
+//tempInfo = *ptrTempInfoFiltered;
+//tempWater = *ptrTempWaterFiltered;
+// 	//static float tempBoilAlc = *ptrBoiling_point_of_alcohol;
+//Pressure_local = *ptrPressure;
+// 	//static float tempValueEnc = *ptrValueEnc;
+// 	static byte hour,minute,second = 0;
 	
 	
 	
 	if (!flags.read(F_PRINT_GUI_MAIN_ONE_USE))
 	{
 		
-		hour = ptr_struct_time->hours;
-		minute = ptr_struct_time->minute;
-		second = ptr_struct_time->second;
+						hour = ptr_struct_time->hours;
+						minute = ptr_struct_time->minute;
+						second = ptr_struct_time->second;
 		
-		flags.set(F_PRINT_GUI_MAIN_ONE_USE);
-		lcd.setCursor(0,1);
-		//digital_pin_debug.write(ON_OUT);
-		lcd.print(F("K:"));
-		//digital_pin_debug.write(OFF_OUT);
-		lcd.print(*ptrTempMainFiltered);
-		lcd.setCursor(7,1);
-		lcd.write((uint8_t)1);
-		//lcd.print(F("C"));
+						flags.set(F_PRINT_GUI_MAIN_ONE_USE);
+						
+						
+						lcd.setCursor(0,1);
+						//digital_pin_debug.write(ON_OUT);
+						lcd.print(F("K:"));
+						//digital_pin_debug.write(OFF_OUT);
+						lcd.print(*ptrTempMainFiltered,3);
+						lcd.setCursor(8,1);
+						lcd.write((uint8_t)1);
+						//lcd.print(F("C"));
 		
-		lcd.setCursor(0,2);
-		lcd.print(F("T:"));
-		lcd.print(*ptrTempInfoFiltered);
-		lcd.setCursor(7,2);
-		lcd.write((uint8_t)1);
-		//lcd.print(F("C"));
+						lcd.setCursor(0,2);
+						lcd.print(F("T:"));
+						lcd.print(*ptrTempInfoFiltered);
+						lcd.setCursor(7,2);
+						lcd.write((uint8_t)1);
+						//lcd.print(F("C"));
 		
-		lcd.setCursor(0,3);
-		lcd.print(F("W:"));
-		lcd.print(*ptrTempWaterFiltered);
-		lcd.setCursor(7,3);
-		lcd.write((uint8_t)1);
+						lcd.setCursor(0,3);
+						lcd.print(F("W:"));
+						lcd.print(*ptrTempWaterFiltered);
+						lcd.setCursor(7,3);
+						lcd.write((uint8_t)1);
 		
-		lcd.setCursor(13,3);
-		lcd.print(F("t"));
+						lcd.setCursor(13,3);
+						lcd.print(F("t"));
 		
-		lcd.write((uint8_t)0 );
-		//lcd.print(F(" "));
+						lcd.write((uint8_t)0 );
+						//lcd.print(F(" "));
 		
 		
-		lcd.print(delta);
-		lcd.write((uint8_t)1);
-		//lcd.print(F("C"));
+						lcd.print(delta);
+						lcd.write((uint8_t)1);
+						//lcd.print(F("C"));
 		
-// 	lcd.setCursor(14,2);
-// 	lcd.print(*ptrValueEnc);
-// 	lcd.setCursor(19,2);
-// 	lcd.write((uint8_t)1);
 	
-	lcd.setCursor(0,0);
-	lcd.print(F("S:"));
-	lcd.print(*ptrBoiling_point_of_alcohol);
-	lcd.setCursor(7,0);
-	lcd.write((uint8_t)1);
+						lcd.setCursor(0,0);
+						lcd.print(F("P:"));
+
+						lcd.print(*ptrPressure);
+						lcd.setCursor(7,0);
+						lcd.write(" ");
 	
-	lcd.setCursor(12,0);
-	lcd.print( 0      );
+						lcd.setCursor(12,0);
+						lcd.print( 0      );
 
-	if (time_local.hours > 9)
-	{
+				if (time_local.hours > 9)
+				{
 		
-			lcd.setCursor(12,0);
-			lcd.print(ptr_struct_time->hours);
-		
-		
-	}else
-	{
-		
-			lcd.setCursor(13,0);
-			lcd.print(ptr_struct_time->hours);
+						lcd.setCursor(12,0);
+						lcd.print(ptr_struct_time->hours);
 		
 		
-	}
+				}else
+				{
+		
+						lcd.setCursor(13,0);
+						lcd.print(ptr_struct_time->hours);
+		
+		
+				}
 
-	 	lcd.print(':'     );
-	 	lcd.print( 0      );
+	 					lcd.print(':'     );
+	 					lcd.print( 0      );
 
-	if (time_local.minute > 9)
-	{
+				if (time_local.minute > 9)
+				{
 		
-			lcd.setCursor(15,0);
-			lcd.print(ptr_struct_time->minute);
+						lcd.setCursor(15,0);
+						lcd.print(ptr_struct_time->minute);
 			
 		
+				}else
+				{
+						lcd.setCursor(16,0);
+						lcd.print(ptr_struct_time->minute);
 		
-	}else
-	{
-			lcd.setCursor(16,0);
-			lcd.print(ptr_struct_time->minute);
-		
-		
-		
-	}
+				}
 
-		lcd.print(':'     );
-		lcd.print( 0      );
+						lcd.print(':'     );
+						lcd.print( 0      );
 
-	if (time_local.second > 9)
-	{
+				if (time_local.second > 9)
+				{
 		
-			lcd.setCursor(18,0);
-			lcd.print(ptr_struct_time->second);
+						lcd.setCursor(18,0);
+						lcd.print(ptr_struct_time->second);
 		
 		
+				}else
+				{
 		
-	}else
-	{
-		
-			lcd.setCursor(19,0);
-			lcd.print(ptr_struct_time->second);
+						lcd.setCursor(19,0);
+						lcd.print(ptr_struct_time->second);
 	
-		
-		
-	}
+				}
+				
 	
-	if (digital_pin_relay.read())
-	{
-		lcd.setCursor(9,0);
-		lcd.write((uint8_t)4);
-		lcd.write((uint8_t)4);
-	}
-	else
-	{
-		lcd.setCursor(9,0);
-		lcd.write((uint8_t)2);
-		lcd.write((uint8_t)3);
+				if (digital_pin_relay.read())
+				{
+					lcd.setCursor(9,0);
+					lcd.write((uint8_t)4);
+					lcd.write((uint8_t)4);
+				}
+				else
+				{
+					lcd.setCursor(9,0);
+					lcd.write((uint8_t)2);
+					lcd.write((uint8_t)3);
 		
-	}
+				}
 	
 	
    }
    
-    if (tempBoilAlc != *ptrBoiling_point_of_alcohol)
-    {
-	    lcd.setCursor(2,0);
-	    lcd.print(*ptrBoiling_point_of_alcohol);
-	    tempBoilAlc = *ptrBoiling_point_of_alcohol;
-    }
+	
+	if (Pressure_local != *ptrPressure)
+	{
+		lcd.setCursor(2,0);
+		lcd.print(*ptrPressure);
+		Pressure_local = *ptrPressure;
+		lcd.setCursor(7,0);
+		lcd.write(" ");
+		
+		
+	}
+	
 	
 	if (tempMain != *ptrTempMainFiltered)
 	{
 		lcd.setCursor(2,1);
-		lcd.print(*ptrTempMainFiltered);
+		//lcd.print(*ptrTempMainFiltered,3);
+		lcd.print(*ptrTempMainFiltered,3);
 		tempMain = *ptrTempMainFiltered;
 	}
 	
@@ -881,17 +910,7 @@ void printGUImainLocation(void)
 		tempWater = *ptrTempWaterFiltered;
 	}
 	
-// 	if (tempValueEnc != *ptrValueEnc)
-// 	{
-// 		lcd.setCursor(14,2);
-// 		lcd.print(*ptrValueEnc);
-// 		tempValueEnc = *ptrValueEnc;
-// 	}
-	
-	
-	
-	
-	
+		
 	if (digital_pin_relay.read())
 	{
 		if (!flags.read(F_PRINT_PICTOGRAM_ONE_USE_TRUE))
@@ -920,26 +939,63 @@ void printGUImainLocation(void)
 	}
 	
 	
-// 	lcd.setCursor(13,2);
-// 	lcd.print(pressure);
 	
-	
-	if (flags.read(LOCK_TEMP_FIXED_OUT_LCD))
+	if (flags.read(F_LOCK_TEMP_FIXED_OUT_LCD))
 	{
-		lcd.setCursor(14,1);
-		lcd.print(current_temp_main_fixed);
+		lcd.setCursor(13,1);
+		lcd.print(current_temp_main_fixed,3);
 		lcd.write((uint8_t)1);
+		
+		if (flags.read(F_ACTIVATE_PRESS_CTRL_SYS))
+		{
+			if (press_temp_state)
+			{
+				lcd.setCursor(14,2);
+				lcd.print(current_press_main_fixed);
+				lcd.setCursor(19,2);
+				lcd.print(" ");
+			}else
+			{
+				lcd.setCursor(13,2);
+				lcd.print(F("      "));
+			}
+		}
+		
+		
+		
 		//lcd.print(F("C"));
 	}else
 	{
 		lcd.setCursor(13,1);
 		lcd.print(F("      "));
+		
+		lcd.setCursor(13,2);
+		lcd.print(F("      "));
 	}
 	
 	
-// 	lcd.setCursor(12,0);
-// 	lcd.print( 0      );
-
+	if (press_temp_state)
+	{
+		
+		if (*ptr_diff_press != 0)
+		{
+			lcd.setCursor(9,2);
+			lcd.print(*ptr_diff_press,1);
+			//lcd.print(*ptr_temp_correct_fixed_by_press);
+			
+		}else
+		
+		{
+			lcd.setCursor(9,2);
+			lcd.print("    ");
+		}
+	} 
+	else
+	{
+		lcd.setCursor(9,2);
+		lcd.print("    ");
+	}
+	
 
 
 	if (time_local.hours > 9)
@@ -1158,7 +1214,6 @@ void printGUIdeltaLocation(void)
 	lcd.print(F("C"));
 }
 
-
 void Button_Control_Power_Set_Location(void)
 {
 	btn_main_clk.tick();
@@ -1281,7 +1336,6 @@ void Print_GUI_Power_Set_Location(void)
 	//lcd.print(F("C"));
 }
 
-
 void buttonControllValveOnOffLocation(void)
 {
 	btn_main_clk.tick();
@@ -1306,112 +1360,95 @@ void printGUIvalveOnOffLocation(void)
 	
 	if (valve_state)
 	{
-		if (!flags.read(F_PRINT_ON_OFF_VALVE_CNTL))
+		if (!flags.read(F_PRINT_ON_OFF_VALVE_CTRL))
 		{
 			lcd.clear();
 			
-			flags.set(F_PRINT_ON_OFF_VALVE_CNTL);
+			flags.set(F_PRINT_ON_OFF_VALVE_CTRL);
 		}
 		lcd.setCursor(15,2);
 		lcd.print(F("ON"));
 	}else
 	{
-		if (flags.read(F_PRINT_ON_OFF_VALVE_CNTL))
+		if (flags.read(F_PRINT_ON_OFF_VALVE_CTRL))
 		{
 			lcd.clear();
 			
-			flags.clear(F_PRINT_ON_OFF_VALVE_CNTL);
+			flags.clear(F_PRINT_ON_OFF_VALVE_CTRL);
 		}
 		lcd.setCursor(15,2);
 		lcd.print(F("OFF"));
 	}
 }
 
-void buttonControllBuzzerOnOffLocation(void)
+void btn_Ctrl_Pressure_Location(void)
 {
 	btn_main_clk.tick();
 	
 	if (btn_main_clk.isClick())
 	{
-		buzzer_state = !buzzer_state;
+		press_temp_state = !press_temp_state;
 	}
 	
 	if (btn_main_clk.isHold())
 	{
+		if (press_temp_state)
+		{
+			flags.set(F_ACTIVATE_PRESS_CTRL_SYS);
+			current_press_main_fixed = *ptrPressure;
+			QueueMain.push_back(task_compare_different_pressure);
+			
+		}else
+		{
+			flags.clear(F_ACTIVATE_PRESS_CTRL_SYS);
+			flags.clear(F_ACTIVATION_PROC_CONTROLL_TEMP);
+			flags.clear(F_LOCK_TEMP_FIXED_OUT_LCD);
+			flags.clear(F_VALVE_ON_OFF);
+			flags.clear(FLAG_FIRST_USE_VALVE_ON);
+			current_press_main_fixed = 0;
+			current_temp_main_fixed = 0;
+			//flags.clear(F_TEMP_OUT_OF_RANGE);
+		}
+		
 		btn_main_clk.resetStates();
+		//EEPROM.put(8,);
+		//EEPROM.put(9,);
 		location = MENU_LOCATION;
 		lcd.clear();
 	}
+	
 }
 
-void printGUIBuzzerOnOffLocation(void)
+void print_GUI_PressureControl_Location(void)
 {
-	lcd.setCursor(0,2);
-	lcd.print(F("Buzzer control  "));
+	lcd.setCursor(1,1);
+	lcd.print(F("Press Temp correct "));
 	
-	if (buzzer_state)
+	if (press_temp_state)
 	{
-		if (!flags.read(F_PRINT_ON_OFF_VALVE_CNTL))
+		if (!flags.read(F_PRINT_ON_OFF_PRESS_TEMP_CTRL))
 		{
 			lcd.clear();
 			
-			flags.set(F_PRINT_ON_OFF_VALVE_CNTL);
+			flags.set(F_PRINT_ON_OFF_PRESS_TEMP_CTRL);
 		}
-		lcd.setCursor(15,2);
+		lcd.setCursor(9,3);
 		lcd.print(F("ON"));
 	}else
 	{
-		if (flags.read(F_PRINT_ON_OFF_VALVE_CNTL))
+		if (flags.read(F_PRINT_ON_OFF_PRESS_TEMP_CTRL))
 		{
 			lcd.clear();
 			
-			flags.clear(F_PRINT_ON_OFF_VALVE_CNTL);
+			flags.clear(F_PRINT_ON_OFF_PRESS_TEMP_CTRL);
 		}
-		lcd.setCursor(15,2);
+		lcd.setCursor(9,3);
 		lcd.print(F("OFF"));
 	}
-}
 
-void buttonControllTempBuzzAlarmLocation(void)
-{
-	btn_main_clk.tick();
 	
-	if (btn_main_clk.isClick())
-	{
-		if (water_supply_alarm_temp_set >= TEMP_MAX_VALUE_ALARM_BUZZ)
-		{
-			water_supply_alarm_temp_set = TEMP_MIN_VALUE_ALARM_BUZZ;
-		}else water_supply_alarm_temp_set += TEMP_STEP_CHANGE_ALARM_BUZZ;
-	}
-	
-	if (btn_main_clk.isHold())
-	{
-		btn_main_clk.resetStates();
-		
-		water_supply_alarm_temp = water_supply_alarm_temp_set;
-		
-		EEPROM.put(8,water_supply_alarm_temp);
-		EEPROM.put(9,water_supply_alarm_temp_set);
-		location = MENU_LOCATION;
-		lcd.clear();
-	}
-	
-}
 
-void printGUITempBuzzAlarmLocation(void)
-{
-	lcd.setCursor(0,2);
-	lcd.print(F("Alarm Water "));
 	
-	//lcd.setCursor(14,2);
-	lcd.print(F("t"));
-
-	//lcd.write((uint8_t)0 );
-	lcd.print(F(" "));
-
-	lcd.print(water_supply_alarm_temp_set);
-	lcd.write((uint8_t)1);
-	lcd.print(F("C"));
 }
 
 void buttonControllDelayOpenValveLocation(void)
@@ -1494,27 +1531,20 @@ void taskControllTemperature(void)
 			{
 				//flags.clear(F_TEMP_OUT_OF_RANGE);
 				
-				if (!flags.read(FLAG_ONE_USE_VALVE_ON))
+				if (!flags.read(FLAG_FIRST_USE_VALVE_ON))
 				{
 					SetTimerTask(valveOn,delay_open_valve);
 					
-					flags.set(FLAG_ONE_USE_VALVE_ON);
+					flags.set(FLAG_FIRST_USE_VALVE_ON);
 				}
+				
 			} 
 			else
 			{
 				flags.set(F_VALVE_ON_OFF);
-				//flags.set(F_BUZZER_ON_OFF);
 				
 			}
 			
-			if (!flags.read(F_LATCH_TEMP_CTRL_BZR_1))
-			{
-				flags.clear(F_BUZZER_ON_OFF);
-				
-				flags.set(F_LATCH_TEMP_CTRL_BZR_1);
-				flags.clear(F_LATCH_TEMP_CTRL_BZR_2);
-			}
 			
 		} 
 		else
@@ -1523,15 +1553,6 @@ void taskControllTemperature(void)
 			if (getTempMainFiltered >= threshold)
 			{
 				flags.clear(F_VALVE_ON_OFF);
-				
-				if (!flags.read(F_LATCH_TEMP_CTRL_BZR_2))
-				{
-					flags.set(F_BUZZER_ON_OFF);
-					
-					flags.set(F_LATCH_TEMP_CTRL_BZR_2);
-					flags.clear(F_LATCH_TEMP_CTRL_BZR_1);
-				}
-				
 				
 				flags.set(F_TEMP_OUT_OF_RANGE);
 				
@@ -1552,24 +1573,15 @@ void taskControllTemperature(void)
 						
 						flags.set(F_VALVE_ON_OFF);
 						
-						
 					}
+					
 				} 
 				
-				//flags.clear(F_BUZZER_ON_OFF);
-				
-				if (!flags.read(F_LATCH_TEMP_CTRL_BZR_1))
-				{
-					flags.clear(F_BUZZER_ON_OFF);
-					
-					flags.set(F_LATCH_TEMP_CTRL_BZR_1);
-					flags.clear(F_LATCH_TEMP_CTRL_BZR_2);
-				}
+
 			}
 			
 			
 		}
-		
 		
 		
 		if (valve_state)
@@ -1599,143 +1611,9 @@ void taskControllTemperature(void)
 			}
 		}
 		
-		
-// 		if (buzzer_state)
-// 				{
-// 					if (flags.read(F_BUZZER_ON_OFF))
-// 					{
-// 						//digital_pin_buzzer.write(ON_OUT);
-// 						flags.set(F_BZR_TIMER_START_STOP);
-// 						flags.set(F_BZR_ALTERNATIVE);
-// 						
-// 					}
-// 					else
-// 					{
-// 						//digital_pin_buzzer.write(OFF_OUT);
-// 						flags.clear(F_BZR_TIMER_START_STOP);
-// 						
-// 					}
-// 				}
-// 				else
-// 				{
-// 					flags.clear(F_BUZZER_ON_OFF);
-// 					flags.clear(F_BZR_TIMER_START_STOP);
-// 					
-// 					
-// 					if (flags.read(F_BUZZER_ON_OFF))
-// 					{
-// 						digital_pin_buzzer.write(ON_OUT);
-// 					}
-// 					else
-// 					{
-// 						digital_pin_buzzer.write(OFF_OUT);
-// 					}
-// 				}
-		
-		
-		
 	}
 		
-		
-		
-	
 	QueueMain.push_back(taskControllTemperature);
-}
-
-void task_buzzer_mng(void)
-{
-	if (buzzer_state)
-	{
-		if (flags.read(F_BUZZER_ON_OFF))
-		{
-			//digital_pin_buzzer.write(ON_OUT);
-			flags.set(F_BZR_TIMER_START_STOP);
-			flags.set(F_BZR_ALTERNATIVE);
-			
-			if (!flags.read(F_LATCH_ON_OFF_TIMER_15_S))
-			{
-				flags.set(F_LATCH_ON_OFF_TIMER_15_S);
-				flags.set(F_ENABLE_TIMER_30_S);
-				
-			}
-			
-			
-		}
-
-			
-			if (flags.read(F_END_TIME_30_S))
-			{
-				flags.clear(F_BUZZER_ON_OFF);
-				flags.clear(F_BZR_TIMER_START_STOP);
-				flags.clear(F_END_TIME_30_S);
-				
-				
-			}
-			
-			if (!flags.read(F_BUZZER_ON_OFF))
-			{
-				flags.clear(F_BZR_TIMER_START_STOP);
-				flags.clear(F_LATCH_ON_OFF_TIMER_15_S);
-				
-				if (!flags.read(F_LATCH_RESET_TIMER_15_S))
-				{
-					flags.set(F_LATCH_RESET_TIMER_15_S);
-					ptr_struct_time->timer30s = TIME_TIMER_S;
-				}
-				
-			}
-
-					
-	}
-	else
-	{
-		flags.clear(F_BUZZER_ON_OFF);
-		flags.clear(F_BZR_TIMER_START_STOP);
-		
-		
-		if (flags.read(F_BUZZER_ON_OFF))
-		{
-			digital_pin_buzzer.write(ON_OUT);
-		}
-		else
-		{
-			digital_pin_buzzer.write(OFF_OUT);
-		}
-	}
-	
-	QueueMain.push_back(task_buzzer_mng);
-}
-
-void task_Ctrl_Water_Valve_System(void)
-{
-	
-	//if (*ptrTempInfoFiltered >= water_supply_alarm_temp)
-	if (valueEnc >= water_supply_alarm_temp)
-	{
-		digital_pin_water_valve.write(ON_OUT);
-		if (!flags.read(F_LATCH_W_VALVE_1))
-		{
-			flags.set(F_BUZZER_ON_OFF);
-			
-			flags.set(F_LATCH_W_VALVE_1);
-			flags.clear(F_LATCH_W_VALVE_2);
-		}
-		
-	//}else if (*ptrTempInfoFiltered <= water_supply_alarm_temp - WATER_SUPPLY_DELTA)
-	}else if (valueEnc <= water_supply_alarm_temp - WATER_SUPPLY_DELTA)
-	{
-		digital_pin_water_valve.write(OFF_OUT);
-		if (!flags.read(F_LATCH_W_VALVE_2))
-		{
-			flags.clear(F_BUZZER_ON_OFF);
-			
-			flags.set(F_LATCH_W_VALVE_2);
-			flags.clear(F_LATCH_W_VALVE_1);
-		}
-		
-	}
-	
-	QueueMain.push_back(task_Ctrl_Water_Valve_System);
 }
 
 void printFromPGM(int charMap)
@@ -1754,7 +1632,7 @@ void valveOn(void)
 	
 	flags.set(F_VALVE_ON_OFF);
 	//flags.clear(F_TEMP_OUT_OF_RANGE);
-	flags.clear(FLAG_ONE_USE_VALVE_ON);
+	flags.clear(FLAG_FIRST_USE_VALVE_ON);
 	
 }
 
@@ -1779,14 +1657,14 @@ void taskEncScanRotary(void)
 		if (encMain.isRight())
 		{
 			//Serial.print("R");
-			 valueEnc += 0.10;
+			 valueEnc += 0.1;
 			 //pressure += 1;	
 		}						// если был поворот направо, увеличиваем на 1
 		//encMain.tick();
 		if (encMain.isLeft())
 		{
 			//Serial.print("L");
-			valueEnc -=0.10;
+			valueEnc -=0.1;
 			//pressure -= 1;
 			
 		} 
@@ -1800,215 +1678,11 @@ void taskEncScanRotary(void)
 	QueueMain.push_back(taskEncScanRotary);
 }
 
-void bzrMng(void)
-{
-	
-	if ((flags.read(F_BZR_TIMER_START_STOP))||(flags.read(F_BZR_ALTERNATIVE)))
-	{
-	
-	
-	
-			switch (bzr_mng_adm)
-			{
-				case 0 : {
-					digital_pin_buzzer.write(ON_OUT);
-					oneTimer.setTimeout(55);
-					oneTimer.start();
-					bzr_mng_adm = 1;
-				}
-				break;
-		
-				case 1 :{
-					if (oneTimer.isReady())
-					{
-						digital_pin_buzzer.write(OFF_OUT);
-						oneTimer.stop();
-						oneTimer.setTimeout(75);
-						oneTimer.start();
-						bzr_mng_adm = 2;
-					}
-				}
-				break;
-		
-				case 2 :{
-					if(oneTimer.isReady())
-					{
-						digital_pin_buzzer.write(ON_OUT);
-						oneTimer.stop();
-						oneTimer.setTimeout(55);
-						oneTimer.start();
-						bzr_mng_adm = 3;
-					}
-				}
-				break;
-		
-				case 3 :{
-			
-					if (oneTimer.isReady())
-					{
-						digital_pin_buzzer.write(OFF_OUT);
-						oneTimer.stop();
-						oneTimer.setTimeout(75);
-						oneTimer.start();
-						bzr_mng_adm = 4;
-					}
-				}
-				break;
-		
-				case 4 :{
-					if(oneTimer.isReady())
-					{
-						digital_pin_buzzer.write(ON_OUT);
-						oneTimer.stop();
-						oneTimer.setTimeout(55);
-						oneTimer.start();
-						bzr_mng_adm = 5;
-					}
-				}
-				break;
-		
-				case 5 :{
-					if (oneTimer.isReady())
-					{
-						digital_pin_buzzer.write(OFF_OUT);
-						oneTimer.stop();
-						oneTimer.setTimeout(650);
-						oneTimer.start();
-						
-						bzr_mng_adm = 6;
-				
-						
-					}
-				}
-				break;
-				
-				case 6 :{
-					
-					if (oneTimer.isReady())
-					{
-						bzr_mng_adm = 0;
-						oneTimer.stop();
-					}
-					
-					
-					
-					if (!flags.read(F_BZR_TIMER_START_STOP))
-					{
-						flags.clear(F_BZR_ALTERNATIVE);
-					}
-				}
-				break;
-		
-			}
-			
-	}
-	
-	QueueMain.push_back(bzrMng);
-}
-
-
-
 void Void(void)
 {
-	// void SDcardInitialization(void)
-	// {
-	//
-	// 	if (!SD.begin())
-	// 	{
-	// 		lcd.setCursor(0,0);
-	// 		lcd.print(F("No SD Card"));
-	// 		flags.clear(F_SD_CARD_ON_OFF_LOGGING);
-	// 	}
-	// 	else
-	// 	{
-	// 		lcd.setCursor(0,0);
-	// 		lcd.print(F("SD Card Ready"));
-	//
-	// 		flags.set(F_SD_CARD_ON_OFF_LOGGING);
-	// 	}
-	//
-	// }
-
-
-	// void taskDataLogging(void)
-	// {
-	//
-	// 	if (flags.read(F_SD_CARD_ON_OFF_LOGGING))
-	// 	{
-	//
-	// 		File log_file_data = SD.open("datalog.txt", FILE_WRITE);
-	//
-	// 		if (log_file_data)
-	// 		{
-	//
-	//
-	// 			log_file_data.print(time_local.hours);
-	// 			log_file_data.print(":");
-	// 			log_file_data.print(time_local.minute);
-	// 			log_file_data.print(":");
-	// 			log_file_data.print(time_local.second);
-	// 			log_file_data.print("	");
-	//
-	// 			log_file_data.print(getTempMainFiltered);
-	// 			log_file_data.print("	");
-	//
-	// 			log_file_data.print(getTempInfoFiltered);
-	// 			log_file_data.print("	");
-	//
-	// 			log_file_data.print(getTempWaterFiltered);
-	// 			log_file_data.print("	");
-	//
-	// 			log_file_data.print(boiling_point_of_alcohol);
-	// 			log_file_data.print("	");
-	//
-	// 			if (digital_pin_relay.read() > 0)
-	// 			{
-	// 				log_file_data.println(digital_pin_relay.read() + 9);
-	// 			}
-	// 			else
-	// 			{
-	// 				log_file_data.println(digital_pin_relay.read());
-	// 			}
-	//
-	// 			log_file_data.close();
-	//
-	// 		}else
-	// 		{
-	// 			flags.clear(F_SD_CARD_ON_OFF_LOGGING);
-	// 		}
-	//
-	// 		SetTimerTask(taskDataLogging,2000);
-	// 	}
-	//
-	// }
-
-}
-
-void FREE_RAM_TEST(void)
-{
-	RAM_SIZE = memoryFree();
 	
-	SetTimerTask(FREE_RAM_TEST,500);
+
 }
-
-// int freeRam () {
-// 	extern int __heap_start, *__brkval;
-// 	int v;
-// 	return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
-// }
-
-extern int __bss_end;
-extern void *__brkval;
-// Функция, возвращающая количество свободного ОЗУ
-int memoryFree() {
-	int freeValue;
-	if ((int)__brkval == 0)
-	freeValue = ((int)&freeValue) - ((int)&__bss_end);
-	else
-	freeValue = ((int)&freeValue) - ((int)__brkval);
-	return freeValue;
-}
-
 
 void UART_init(void)
 {
@@ -2043,9 +1717,6 @@ inline void powerCalculate(void)
 	
 	//return power;
 }
-
-
-
 
 inline void assemblyMessageToSend( STRCommand command_line, byte mode_transmitt = NULL, byte encoder_value = NULL)
 {
@@ -2096,9 +1767,6 @@ inline void assemblyMessageToSend( STRCommand command_line, byte mode_transmitt 
 	
 }
 
-
-
-
 int reverseCharToNum(void)
 {
 	
@@ -2147,3 +1815,53 @@ void task_Set_Voltage_RMVK(void)
 	
 }
 
+void task_compare_different_pressure(void)
+{
+	
+		*ptr_diff_press = *ptrPressure - *ptr_current_press_main_fixed;
+		
+		if (*ptr_tmp_diff_press != *ptr_diff_press)
+		{
+			*ptr_temp_correct_fixed_by_press = ((((*ptr_diff_press - *ptr_tmp_diff_press)) * 0.034) * 100) /100;
+		
+			current_temp_main_fixed = current_temp_main_fixed + (*ptr_temp_correct_fixed_by_press);
+				
+			*ptr_tmp_diff_press = *ptr_diff_press;
+			
+		}
+		
+		if (press_temp_state)
+		{
+		
+			SetTimerTask(task_compare_different_pressure,100);
+		
+		}
+	
+}
+
+
+
+// void FREE_RAM_TEST(void)
+// {
+// 	RAM_SIZE = memoryFree();
+//
+// 	SetTimerTask(FREE_RAM_TEST,500);
+// }
+
+// int freeRam () {
+// 	extern int __heap_start, *__brkval;
+// 	int v;
+// 	return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
+// }
+
+//extern int __bss_end;
+//extern void *__brkval;
+// Функция, возвращающая количество свободного ОЗУ
+// int memoryFree() {
+// 	int freeValue;
+// 	if ((int)__brkval == 0)
+// 	freeValue = ((int)&freeValue) - ((int)&__bss_end);
+// 	else
+// 	freeValue = ((int)&freeValue) - ((int)__brkval);
+// 	return freeValue;
+// }
