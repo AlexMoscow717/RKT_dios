@@ -1845,6 +1845,8 @@ void task_compare_different_pressure(void)
 void test2(void)
 {
 	int a = 56;
+	
+	int b = 0;
 }
 
 // void FREE_RAM_TEST(void)
