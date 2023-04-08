@@ -11,7 +11,7 @@
 #define PIN_BUZZER 14
 #define CS_PIN_MY_SD_CARD 4
 #define PIN_BTN_MAIN 4
-#define PIN_DEBUG 15
+#define PIN_DEBUG 13
 #define PIN_WATER_VALVE 13
 #define WATER_SUPPLY_DELTA 1
 //#define roundM(x) ((x)>=0?(float)((x)+0.001):(float)((x)-0.001))
@@ -183,11 +183,11 @@ float tmp_diff_press = 0;
 
 
 
- float tempMain = 0;
- float tempInfo = 0;
- float tempWater = 0;
+ //float tempMain = 0;
+ //float tempInfo = 0;
+ //float tempWater = 0;
 //static float tempBoilAlc = *ptrBoiling_point_of_alcohol;
- float Pressure_local = 0;
+ //float Pressure_local = 0;
 //static float tempValueEnc = *ptrValueEnc;
  byte hour,minute,second = 0;
 
@@ -256,7 +256,7 @@ struct time_clock_main
 };
 
 
-const char name1[] PROGMEM = "Pressure On/Off";  // ������ ��� � ����� ������, ������ �������� �� �����
+const char name1[] PROGMEM = "Pressure On/Off";  
 const char name2[] PROGMEM = "Temp Delta";
 const char name3[] PROGMEM = "Valve On/Off";
 const char name4[] PROGMEM = "void";
@@ -364,14 +364,14 @@ ISR(TIMER1_A)
 
 ISR(USART_UDRE_vect)
 {
-	buff_index_tx++;													// ����������� ������
+	buff_index_tx++;													
 	
-	if((usartBufferTX[buff_index_tx] == '$')||(buff_index_tx == BUFF_TX_SIZE))							// ������ ���� ������?
+	if((usartBufferTX[buff_index_tx] == '$')||(buff_index_tx == BUFF_TX_SIZE))							
 	{
 		USART_UDRE_INT_OFF
 		buff_index_tx = 0;
 		USART_TX_INT_ON
-		// ��������� ���������� �� ����������� - �������� ���������
+		
 	}
 	else
 	{
@@ -447,9 +447,9 @@ void setup()
 	barometr.begin();
 	barometr.oneMeasurement();
 	
-	btn_main_clk.setDebounce(20);        // ��������� ������������ (�� ��������� 80 ��)
-	btn_main_clk.setTimeout(600);        // ��������� �������� �� ��������� (�� ��������� 500 ��)
-	btn_main_clk.setClickTimeout(150);   // ��������� �������� ����� ������� (�� ��������� 300 ��)
+	btn_main_clk.setDebounce(20);        
+	btn_main_clk.setTimeout(600);        
+	btn_main_clk.setClickTimeout(150);   
 	
 	
 	for (int i = 0; i < BUFF_TX_SIZE ; i++)
@@ -467,7 +467,7 @@ void setup()
 	ptrTempInfoFiltered = &getTempInfoFiltered;
 	//ptrBoiling_point_of_alcohol = &boiling_point_of_alcohol;
 	ptrPressure = &pressureATM;
-	//ptrValueEnc = &valueEnc;
+	ptrValueEnc = &valueEnc;
 	ptr_temp_correct_fixed_by_press = &temp_correct_fixed_by_press;
 	//digital_pin_relay.write(ON_OUT);
 	//Serial.begin(9600);
@@ -520,6 +520,7 @@ void setup()
 	ptr_diff_press = &different_pressure;
 	ptr_current_press_main_fixed = &current_press_main_fixed;
 	ptr_tmp_diff_press = &tmp_diff_press;
+	//QueueMain.push_back(task_compare_different_pressure);
 	
 }
 
@@ -537,7 +538,9 @@ void pressureComputing(void)
 	//barometr.begin();
 	if (!barometr.isMeasuring())
 	{
-		*ptrPressure = (float)((int)((pressureToMmHg(barometr.readPressure())) * 10) % 10000) / 10;
+		//*ptrPressure = (float)((int)((pressureToMmHg(barometr.readPressure())) * 10) % 10000) / 10;
+		
+		*ptrPressure = (float)((int)((*ptrValueEnc) * 10) % 10000) / 10;
 		//boiling_point_of_alcohol = (float)(0.038 * pressure) + 49.27;
 		barometr.oneMeasurement();
 	}
@@ -549,11 +552,11 @@ void pressureComputing(void)
 
 void taskRequestTempMain(void)
 {
-	
+	digital_pin_debug.write(ON_OUT);
 	sensorTempMain.requestTemp();
 	
 	SetTimerTask(taskGetTempMain,900);
-		
+	digital_pin_debug.write(OFF_OUT);	
 }
 
 void taskGetTempMain(void)
@@ -734,13 +737,13 @@ void printGUImainLocation(void)
 	
 	//digital_pin_debug.write(ON_OUT);
 	
-// 	static float tempMain = *ptrTempMainFiltered;
-// 	static float tempInfo = *ptrTempInfoFiltered;
-// 	static float tempWater = *ptrTempWaterFiltered;
+ 	static float tempMain = *ptrTempMainFiltered;
+ 	static float tempInfo = *ptrTempInfoFiltered;
+ 	static float tempWater = *ptrTempWaterFiltered;
 // 	//static float tempBoilAlc = *ptrBoiling_point_of_alcohol;
-// 	static float Pressure_local = *ptrPressure;
+ 	static float Pressure_local = *ptrPressure;
 // 	//static float tempValueEnc = *ptrValueEnc;
-// 	static byte hour,minute,second = 0;
+ 	static byte hour,minute,second = 0;
 
 //tempMain = *ptrTempMainFiltered;
 //tempInfo = *ptrTempInfoFiltered;
@@ -752,128 +755,128 @@ void printGUImainLocation(void)
 	
 	
 	
-	if (!flags.read(F_PRINT_GUI_MAIN_ONE_USE))
-	{
+					if (!flags.read(F_PRINT_GUI_MAIN_ONE_USE))
+					{
 		
-						hour = ptr_struct_time->hours;
-						minute = ptr_struct_time->minute;
-						second = ptr_struct_time->second;
+										hour = ptr_struct_time->hours;
+										minute = ptr_struct_time->minute;
+										second = ptr_struct_time->second;
 		
-						flags.set(F_PRINT_GUI_MAIN_ONE_USE);
+										flags.set(F_PRINT_GUI_MAIN_ONE_USE);
 						
 						
-						lcd.setCursor(0,1);
-						//digital_pin_debug.write(ON_OUT);
-						lcd.print(F("K:"));
-						//digital_pin_debug.write(OFF_OUT);
-						lcd.print(*ptrTempMainFiltered,3);
-						lcd.setCursor(8,1);
-						lcd.write((uint8_t)1);
-						//lcd.print(F("C"));
+										lcd.setCursor(0,1);
+										//digital_pin_debug.write(ON_OUT);
+										lcd.print(F("K:"));
+										//digital_pin_debug.write(OFF_OUT);
+										lcd.print(*ptrTempMainFiltered,3);
+										lcd.setCursor(8,1);
+										lcd.write((uint8_t)1);
+										//lcd.print(F("C"));
 		
-						lcd.setCursor(0,2);
-						lcd.print(F("T:"));
-						lcd.print(*ptrTempInfoFiltered);
-						lcd.setCursor(7,2);
-						lcd.write((uint8_t)1);
-						//lcd.print(F("C"));
+										lcd.setCursor(0,2);
+										lcd.print(F("T:"));
+										lcd.print(*ptrTempInfoFiltered);
+										lcd.setCursor(7,2);
+										lcd.write((uint8_t)1);
+										//lcd.print(F("C"));
 		
-						lcd.setCursor(0,3);
-						lcd.print(F("W:"));
-						lcd.print(*ptrTempWaterFiltered);
-						lcd.setCursor(7,3);
-						lcd.write((uint8_t)1);
+										lcd.setCursor(0,3);
+										lcd.print(F("W:"));
+										lcd.print(*ptrTempWaterFiltered);
+										lcd.setCursor(7,3);
+										lcd.write((uint8_t)1);
 		
-						lcd.setCursor(13,3);
-						lcd.print(F("t"));
+										lcd.setCursor(13,3);
+										lcd.print(F("t"));
 		
-						lcd.write((uint8_t)0 );
-						//lcd.print(F(" "));
+										lcd.write((uint8_t)0 );
+										//lcd.print(F(" "));
 		
 		
-						lcd.print(delta);
-						lcd.write((uint8_t)1);
-						//lcd.print(F("C"));
+										lcd.print(delta);
+										lcd.write((uint8_t)1);
+										//lcd.print(F("C"));
 		
 	
-						lcd.setCursor(0,0);
-						lcd.print(F("P:"));
+										lcd.setCursor(0,0);
+										lcd.print(F("P:"));
 
-						lcd.print(*ptrPressure);
-						lcd.setCursor(7,0);
-						lcd.write(" ");
+										lcd.print(*ptrPressure);
+										lcd.setCursor(7,0);
+										lcd.write(" ");
 	
-						lcd.setCursor(12,0);
-						lcd.print( 0      );
+										lcd.setCursor(12,0);
+										lcd.print( 0      );
 
-				if (time_local.hours > 9)
-				{
+								if (time_local.hours > 9)
+								{
 		
-						lcd.setCursor(12,0);
-						lcd.print(ptr_struct_time->hours);
-		
-		
-				}else
-				{
-		
-						lcd.setCursor(13,0);
-						lcd.print(ptr_struct_time->hours);
+										lcd.setCursor(12,0);
+										lcd.print(ptr_struct_time->hours);
 		
 		
-				}
+								}else
+								{
+		
+										lcd.setCursor(13,0);
+										lcd.print(ptr_struct_time->hours);
+		
+		
+								}
 
-	 					lcd.print(':'     );
-	 					lcd.print( 0      );
+	 									lcd.print(':'     );
+	 									lcd.print( 0      );
 
-				if (time_local.minute > 9)
-				{
+								if (time_local.minute > 9)
+								{
 		
-						lcd.setCursor(15,0);
-						lcd.print(ptr_struct_time->minute);
+										lcd.setCursor(15,0);
+										lcd.print(ptr_struct_time->minute);
 			
 		
-				}else
-				{
-						lcd.setCursor(16,0);
-						lcd.print(ptr_struct_time->minute);
+								}else
+								{
+										lcd.setCursor(16,0);
+										lcd.print(ptr_struct_time->minute);
 		
-				}
+								}
 
-						lcd.print(':'     );
-						lcd.print( 0      );
+										lcd.print(':'     );
+										lcd.print( 0      );
 
-				if (time_local.second > 9)
-				{
+								if (time_local.second > 9)
+								{
 		
-						lcd.setCursor(18,0);
-						lcd.print(ptr_struct_time->second);
+										lcd.setCursor(18,0);
+										lcd.print(ptr_struct_time->second);
 		
 		
-				}else
-				{
+								}else
+								{
 		
-						lcd.setCursor(19,0);
-						lcd.print(ptr_struct_time->second);
+										lcd.setCursor(19,0);
+										lcd.print(ptr_struct_time->second);
 	
-				}
+								}
 				
 	
-				if (digital_pin_relay.read())
-				{
-					lcd.setCursor(9,0);
-					lcd.write((uint8_t)4);
-					lcd.write((uint8_t)4);
-				}
-				else
-				{
-					lcd.setCursor(9,0);
-					lcd.write((uint8_t)2);
-					lcd.write((uint8_t)3);
+								if (digital_pin_relay.read())
+								{
+									lcd.setCursor(9,0);
+									lcd.write((uint8_t)4);
+									lcd.write((uint8_t)4);
+								}
+								else
+								{
+									lcd.setCursor(9,0);
+									lcd.write((uint8_t)2);
+									lcd.write((uint8_t)3);
 		
-				}
+								}
 	
 	
-   }
+				   }
    
 	
 	if (Pressure_local != *ptrPressure)
@@ -887,13 +890,15 @@ void printGUImainLocation(void)
 		
 	}
 	
-	
+	//digital_pin_debug.write(ON_OUT);
 	if (tempMain != *ptrTempMainFiltered)
 	{
+		//digital_pin_debug.write(ON_OUT);
 		lcd.setCursor(2,1);
 		//lcd.print(*ptrTempMainFiltered,3);
 		lcd.print(*ptrTempMainFiltered,3);
 		tempMain = *ptrTempMainFiltered;
+		//digital_pin_debug.write(OFF_OUT);
 	}
 	
 	if (tempInfo != *ptrTempInfoFiltered)
@@ -1396,7 +1401,7 @@ void btn_Ctrl_Pressure_Location(void)
 		{
 			flags.set(F_ACTIVATE_PRESS_CTRL_SYS);
 			current_press_main_fixed = *ptrPressure;
-			QueueMain.push_back(task_compare_different_pressure);
+			//QueueMain.push_back(task_compare_different_pressure);
 			
 		}else
 		{
@@ -1619,11 +1624,11 @@ void taskControllTemperature(void)
 void printFromPGM(int charMap)
 {
 	uint16_t ptr = pgm_read_word(charMap);
-	    // �������� ����� �� ������� ������
+	   
 	while (pgm_read_byte(ptr) != NULL)
-	{      // ��� ������ �� �������� �������
-		lcd.print(char(pgm_read_byte(ptr)));    // ������� � ������� ��� ���� ��� ����
-		ptr++;                                  // ��������� ������
+	{     
+		lcd.print(char(pgm_read_byte(ptr)));    
+		ptr++;                                 
 	}
 }
 
