@@ -710,9 +710,11 @@ void buttonControllMainLoc(void)
 	if (btn_main_clk.isClick())
 	{
 		current_temp_main_fixed = getTempMainFiltered;
-		
+		digital_pin_debug.write(ON_OUT);
+		digital_pin_debug.write(OFF_OUT);
 		if (flags.read(F_ACTIVATE_PRESS_CTRL_SYS))
 		{
+			
 			if (press_temp_state)
 			{
 				current_press_main_fixed = *ptrPressure;
@@ -721,12 +723,10 @@ void buttonControllMainLoc(void)
 			}
 		}
 		
-		
-		
-		//current_temp_main_fixed = valueEnc;
-		flags.set(F_ACTIVATION_PROC_CONTROLL_TEMP);
-		flags.set(F_LOCK_TEMP_FIXED_OUT_LCD);
-		flags.clear(F_TEMP_OUT_OF_RANGE);
+			//current_temp_main_fixed = valueEnc;
+			flags.set(F_ACTIVATION_PROC_CONTROLL_TEMP);
+			flags.set(F_LOCK_TEMP_FIXED_OUT_LCD);
+			flags.clear(F_TEMP_OUT_OF_RANGE);
 		
 		
 		
@@ -1402,7 +1402,7 @@ void btn_Ctrl_Pressure_Location(void)
 		{
 			flags.set(F_ACTIVATE_PRESS_CTRL_SYS);
 			current_press_main_fixed = *ptrPressure;
-			//QueueMain.push_back(task_compare_different_pressure);
+			QueueMain.push_back(task_compare_different_pressure);
 			
 		}else
 		{
