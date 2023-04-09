@@ -312,7 +312,7 @@ QuickIO digital_pin_water_valve = PIN_WATER_VALVE;
 
 LiquidCrystal_I2C lcd(0x27, 20, 4);
 
-BitPack <14> flags;
+BitPack <20> flags;
 
 time_clock_main time_local;
 
@@ -376,7 +376,7 @@ ISR(USART_UDRE_vect)
 	else
 	{
 		UDR0 = usartBufferTX[buff_index_tx];
-		usartBufferTX[buff_index_tx] = 0;							// ����� ������ �� �������.
+		usartBufferTX[buff_index_tx] = 0;							
 	}
 	
 
@@ -417,7 +417,7 @@ void setup()
 	
 	digital_pin_relay.write(OFF_OUT);
 	digital_pin_water_valve.write(OFF_OUT);
-	
+	flags.clearAll();
 	lcd.init();
 	lcd.backlight();
 	
@@ -435,7 +435,7 @@ void setup()
 	Timer2.setFrequency(1000);
 	Timer2.enableISR();
 	
-	flags.clearAll();
+	
 	
 	sensorTempMain.setResolution(12);
 	sensorTempInfo.setResolution(12);
@@ -448,8 +448,8 @@ void setup()
 	barometr.oneMeasurement();
 	
 	btn_main_clk.setDebounce(20);        
-	btn_main_clk.setTimeout(600);        
-	btn_main_clk.setClickTimeout(150);   
+	btn_main_clk.setTimeout(500);        
+	btn_main_clk.setClickTimeout(100);   
 	
 	
 	for (int i = 0; i < BUFF_TX_SIZE ; i++)
@@ -547,7 +547,8 @@ void pressureComputing(void)
 	
 	
 	
-	SetTimerTask(pressureComputing,1000);
+	//SetTimerTask(pressureComputing,1000);
+	QueueMain.push_back(pressureComputing);
 }
 
 void taskRequestTempMain(void)
@@ -555,7 +556,7 @@ void taskRequestTempMain(void)
 	digital_pin_debug.write(ON_OUT);
 	sensorTempMain.requestTemp();
 	
-	SetTimerTask(taskGetTempMain,900);
+	SetTimerTask(taskGetTempMain,1000);
 	digital_pin_debug.write(OFF_OUT);	
 }
 
@@ -576,7 +577,7 @@ void taskRequestTempInfo(void)
 	
 	sensorTempInfo.requestTemp();
 	
-	SetTimerTask(taskGetTempInfo,900);
+	SetTimerTask(taskGetTempInfo,1000);
 		
 }
 
@@ -595,7 +596,7 @@ void taskRequestTempWater(void)
 	
 	sensorTempWater.requestTemp();
 	
-	SetTimerTask(taskGetTempWater,900);
+	SetTimerTask(taskGetTempWater,1000);
 	
 }
 
@@ -694,6 +695,9 @@ void taskMainProcess(void)
 
 void buttonControllMainLoc(void)
 {
+	
+	static boolean* ptr_local_press_temp_state = &press_temp_state;
+	
 	btn_main_clk.tick();
 	
 	if (btn_main_clk.isHold())
@@ -715,7 +719,7 @@ void buttonControllMainLoc(void)
 		if (flags.read(F_ACTIVATE_PRESS_CTRL_SYS))
 		{
 			
-			if (press_temp_state)
+			if (*ptr_local_press_temp_state)
 			{
 				current_press_main_fixed = *ptrPressure;
 				QueueMain.push_back(task_compare_different_pressure);
@@ -1389,16 +1393,26 @@ void printGUIvalveOnOffLocation(void)
 
 void btn_Ctrl_Pressure_Location(void)
 {
+	
+	static boolean* ptr_local_press_temp_state = &press_temp_state;
 	btn_main_clk.tick();
 	
 	if (btn_main_clk.isClick())
 	{
-		press_temp_state = !press_temp_state;
+		//press_temp_state = !press_temp_state;
+		
+		if(*ptr_local_press_temp_state)
+		{
+			*ptr_local_press_temp_state = false;
+		}else
+		{
+			*ptr_local_press_temp_state = true;
+		}
 	}
 	
 	if (btn_main_clk.isHold())
 	{
-		if (press_temp_state)
+		if (*ptr_local_press_temp_state)
 		{
 			flags.set(F_ACTIVATE_PRESS_CTRL_SYS);
 			current_press_main_fixed = *ptrPressure;
@@ -1406,31 +1420,34 @@ void btn_Ctrl_Pressure_Location(void)
 			
 		}else
 		{
+			current_press_main_fixed = 0;
+			current_temp_main_fixed = 0;
 			flags.clear(F_ACTIVATE_PRESS_CTRL_SYS);
 			flags.clear(F_ACTIVATION_PROC_CONTROLL_TEMP);
 			flags.clear(F_LOCK_TEMP_FIXED_OUT_LCD);
 			flags.clear(F_VALVE_ON_OFF);
 			flags.clear(FLAG_FIRST_USE_VALVE_ON);
-			current_press_main_fixed = 0;
-			current_temp_main_fixed = 0;
+			
 			//flags.clear(F_TEMP_OUT_OF_RANGE);
 		}
 		
-		btn_main_clk.resetStates();
+		
 		//EEPROM.put(8,);
 		//EEPROM.put(9,);
 		location = MENU_LOCATION;
 		lcd.clear();
+		btn_main_clk.resetStates();
 	}
 	
 }
 
 void print_GUI_PressureControl_Location(void)
 {
+	static boolean* ptr_local_press_temp_state = &press_temp_state;
 	lcd.setCursor(1,1);
 	lcd.print(F("Press Temp correct "));
 	
-	if (press_temp_state)
+	if (*ptr_local_press_temp_state)
 	{
 		if (!flags.read(F_PRINT_ON_OFF_PRESS_TEMP_CTRL))
 		{
@@ -1839,7 +1856,9 @@ void task_compare_different_pressure(void)
 		if (press_temp_state)
 		{
 		
-			SetTimerTask(task_compare_different_pressure,100);
+			//SetTimerTask(task_compare_different_pressure,100);
+			
+			QueueMain.push_back(task_compare_different_pressure);
 		
 		}
 	
