@@ -703,6 +703,7 @@ void buttonControllMainLoc(void)
 		pointer_menu = ZERO_ITEM_MENU;
 		lcd.clear();
 		//lcd.clear();
+		return;
 		
 	}
 	
