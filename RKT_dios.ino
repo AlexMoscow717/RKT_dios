@@ -116,6 +116,7 @@
 #include <GyverTimers.h>
 #include <GyverTimer.h>
 //#include <microDS18B20.h>
+#include <microDS18B20.h>
 //#include <>
 #include <QuickIO.h>
 #include <bitPack.h>
@@ -293,9 +294,9 @@ STRCommand* ptrComRegData = &commandREGdata;
 
 Queue QueueMain;
 
-MicroDS18B20 sensorTempMain(DS18B20_MAIN_PIN);
-MicroDS18B20 sensorTempInfo(DS18B20_INFO_PIN);
-MicroDS18B20 sensorTempWater(DS18B20_WATER_PIN);
+MicroDS18B20<DS18B20_MAIN_PIN> sensorTempMain;
+MicroDS18B20<DS18B20_INFO_PIN> sensorTempInfo;
+MicroDS18B20<DS18B20_WATER_PIN> sensorTempWater;
 GyverBME280 barometr;
 //Sd2Card card;
 
