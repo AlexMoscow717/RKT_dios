@@ -1,7 +1,6 @@
 
 
-#include <DS_raw.h>
-#include <microOneWire.h>
+
 /*
     Name:       RKT_dios.ino
     Created:	13.01.2021 10:41:24
@@ -113,6 +112,8 @@
 // #include <SPI.h>
 // #include <SD.h>
 //#include <ArduRTOS.h>
+#include <DS_raw.h>
+#include <microOneWire.h>
 #include <ArduRTOS_AL.h>
 //#include <ArduRTOS_AL2.h>
 #include <GyverButton.h>
@@ -301,6 +302,8 @@ Queue QueueMain;
 MicroDS18B20<DS18B20_MAIN_PIN> sensorTempMain;
 MicroDS18B20<DS18B20_INFO_PIN> sensorTempInfo;
 MicroDS18B20<DS18B20_WATER_PIN> sensorTempWater;
+//MicroDS18B20<3> sensor;
+//MicroDS18B20<3> sens;
 GyverBME280 barometr;
 //Sd2Card card;
 
