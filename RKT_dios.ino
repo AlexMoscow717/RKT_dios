@@ -565,7 +565,7 @@ void taskRequestTempMain(void)
 	digital_pin_debug.write(ON_OUT);
 	sensorTempMain.requestTemp();
 	
-	SetTimerTask(taskGetTempMain,1000);
+	SetTimerTask(taskGetTempMain,800);
 	digital_pin_debug.write(OFF_OUT);	
 }
 
@@ -575,8 +575,11 @@ void taskGetTempMain(void)
 	//getTempMain1 = sensorTempMain.getTemp();
 	
 	//SetTimerTask(taskRequestGetTempMain1,900);
+	//digital_pin_debug.write(ON_OUT);
 	//getTempMainFiltered = filterTempMain.filtered(sensorTempMain.getTemp());
 	getTempMainFiltered = (float)((int)((filterTempMain.filtered(sensorTempMain.getTemp())) * 100) % 10000) / 100;
+	//digital_pin_debug.write(OFF_OUT);
+	//getTempMainFiltered = (float)((int)((filterTempMain.filtered(sensorTempMain.getTemp())) * 100) % 10000) / 100;
 	QueueMain.push_back(taskRequestTempMain);
 	
 }
@@ -586,7 +589,7 @@ void taskRequestTempInfo(void)
 	
 	sensorTempInfo.requestTemp();
 	
-	SetTimerTask(taskGetTempInfo,1000);
+	SetTimerTask(taskGetTempInfo,800);
 		
 }
 
@@ -605,7 +608,7 @@ void taskRequestTempWater(void)
 	
 	sensorTempWater.requestTemp();
 	
-	SetTimerTask(taskGetTempWater,1000);
+	SetTimerTask(taskGetTempWater,800);
 	
 }
 
