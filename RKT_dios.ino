@@ -183,7 +183,7 @@ volatile byte index_arr_reverse_fnc = 0;
 
 int* ptr_power_level = &power_level;
 byte* ptr_voltage_level_set = &voltage_level_set;
-float valueEnc = 730;
+float valueEnc = 25;
 // float valueEncTest = 22;
 float current_temp_main_fixed = 0;
 float current_press_main_fixed = 0;
@@ -318,6 +318,7 @@ GKalman filterTempWater(0.08,0.75);
 TimerMs tSensorTempMain(800,0,1);
 TimerMs tSensorTempInfo(800,0,1);
 TimerMs tSensorTempWater(800,0,1);
+TimerMs tDelayOpenValve;
 
 QuickIO digital_pin_relay = PIN_RELAY;
 QuickIO digital_pin_debug = PIN_DEBUG;
@@ -449,6 +450,7 @@ void setup()
 	tSensorTempMain.setTimerMode();
 	tSensorTempInfo.setTimerMode();
 	tSensorTempWater.setTimerMode();
+	tDelayOpenValve.setTimerMode();
 	//Timer2.setFrequency(1000);
 	//Timer2.enableISR();
 	
@@ -536,6 +538,8 @@ void setup()
 	QueueMain.push_back(taskServiceTempMain);
 	QueueMain.push_back(taskServiceTempInfo);
 	QueueMain.push_back(taskServiceTempWater);
+	QueueMain.push_back(taskServiceDelayOpenValve);
+	QueueMain.push_back(taskValveControllService);
 	
 	ptr_diff_press = &different_pressure;
 	ptr_current_press_main_fixed = &current_press_main_fixed;
@@ -630,6 +634,15 @@ void taskGetTempWater(void)
 {
 	getTempWaterFiltered = filterTempWater.filtered(sensorTempWater.getTemp());
 	QueueMain.push_back(taskRequestTempWater);
+}
+
+void taskServiceDelayOpenValve(void)
+{
+	if (tDelayOpenValve.tick())
+	{
+		QueueMain.push_back(valveOn);
+	}
+	QueueMain.push_back(taskServiceDelayOpenValve);
 }
 
 void taskMainProcess(void)
@@ -733,7 +746,8 @@ void buttonControllMainLoc(void)
 	
 	if (btn_main_clk.isClick())
 	{
-		current_temp_main_fixed = getTempMainFiltered;
+		//current_temp_main_fixed = getTempMainFiltered;
+		current_temp_main_fixed = *ptrValueEnc;
 		digital_pin_debug.write(ON_OUT);
 		digital_pin_debug.write(OFF_OUT);
 		if (flags.read(F_ACTIVATE_PRESS_CTRL_SYS))
@@ -761,8 +775,8 @@ void printGUImainLocation(void)
 {
 	
 	//digital_pin_debug.write(ON_OUT);
-	
- 	static float tempMain = *ptrTempMainFiltered;
+	static float tempMain = *ptrValueEnc;;
+ 	//static float tempMain = *ptrTempMainFiltered;
  	static float tempInfo = *ptrTempInfoFiltered;
  	static float tempWater = *ptrTempWaterFiltered;
 // 	//static float tempBoilAlc = *ptrBoiling_point_of_alcohol;
@@ -775,7 +789,7 @@ void printGUImainLocation(void)
 //tempWater = *ptrTempWaterFiltered;
 // 	//static float tempBoilAlc = *ptrBoiling_point_of_alcohol;
 //Pressure_local = *ptrPressure;
-// 	//static float tempValueEnc = *ptrValueEnc;
+//static float tempValueEnc = *ptrValueEnc;
 // 	static byte hour,minute,second = 0;
 	
 	
@@ -794,7 +808,8 @@ void printGUImainLocation(void)
 										//digital_pin_debug.write(ON_OUT);
 										lcd.print(F("K:"));
 										//digital_pin_debug.write(OFF_OUT);
-										lcd.print(*ptrTempMainFiltered,3);
+										lcd.print(*ptrValueEnc,3);
+										//lcd.print(*ptrTempMainFiltered,3);
 										lcd.setCursor(8,1);
 										lcd.write((uint8_t)1);
 										//lcd.print(F("C"));
@@ -916,13 +931,17 @@ void printGUImainLocation(void)
 	}
 	
 	//digital_pin_debug.write(ON_OUT);
-	if (tempMain != *ptrTempMainFiltered)
+	//if (tempMain != *ptrTempMainFiltered)
+	if (tempMain != *ptrValueEnc)
 	{
 		//digital_pin_debug.write(ON_OUT);
 		lcd.setCursor(2,1);
 		//lcd.print(*ptrTempMainFiltered,3);
-		lcd.print(*ptrTempMainFiltered,3);
-		tempMain = *ptrTempMainFiltered;
+		//lcd.print(*ptrTempMainFiltered,3);
+		//tempMain = *ptrTempMainFiltered;
+		
+		lcd.print(*ptrValueEnc,3);
+		tempMain = *ptrValueEnc;
 		//digital_pin_debug.write(OFF_OUT);
 	}
 	
@@ -1393,9 +1412,9 @@ void printGUIvalveOnOffLocation(void)
 		if (!flags.read(F_PRINT_ON_OFF_VALVE_CTRL))
 		{
 			lcd.clear();
-			
 			flags.set(F_PRINT_ON_OFF_VALVE_CTRL);
 		}
+		
 		lcd.setCursor(15,2);
 		lcd.print(F("ON"));
 	}else
@@ -1403,9 +1422,9 @@ void printGUIvalveOnOffLocation(void)
 		if (flags.read(F_PRINT_ON_OFF_VALVE_CTRL))
 		{
 			lcd.clear();
-			
 			flags.clear(F_PRINT_ON_OFF_VALVE_CTRL);
 		}
+		
 		lcd.setCursor(15,2);
 		lcd.print(F("OFF"));
 	}
@@ -1540,15 +1559,18 @@ void taskControllTemperature(void)
 	if (flags.read(F_ACTIVATION_PROC_CONTROLL_TEMP))
 	{
 		threshold = current_temp_main_fixed + delta;
-		//if (valueEnc <= current_temp_main_fixed)		//getTempMainFiltered
-		if (getTempMainFiltered <= current_temp_main_fixed)
+		if (valueEnc <= current_temp_main_fixed)		//getTempMainFiltered
+		//if (getTempMainFiltered <= current_temp_main_fixed)
 		{
 			if (flags.read(F_TEMP_OUT_OF_RANGE))
 			{
 				//flags.clear(F_TEMP_OUT_OF_RANGE);
 				if (!flags.read(FLAG_FIRST_USE_VALVE_ON))
 				{
-					SetTimerTask(valveOn,delay_open_valve);
+					//SetTimerTask(valveOn,delay_open_valve);
+					tDelayOpenValve.setTimerMode();
+					tDelayOpenValve.setTime(delay_open_valve);
+					tDelayOpenValve.start();
 					flags.set(FLAG_FIRST_USE_VALVE_ON);
 				}
 				
@@ -1562,8 +1584,8 @@ void taskControllTemperature(void)
 		} 
 		else
 		{
-			//if (valueEnc >= threshold)
-			if (getTempMainFiltered >= threshold)
+			if (valueEnc >= threshold)
+			//if (getTempMainFiltered >= threshold)
 			{
 				flags.clear(F_VALVE_ON_OFF);
 				flags.set(F_TEMP_OUT_OF_RANGE);
@@ -1593,30 +1615,30 @@ void taskControllTemperature(void)
 		}
 		
 		
-		if (valve_state)
-		{
-			if (flags.read(F_VALVE_ON_OFF))
-			{
-				digital_pin_relay.write(ON_OUT);
-			} 
-			else
-			{
-				digital_pin_relay.write(OFF_OUT);
-			}
-		} 
-		else
-		{
-			flags.clear(F_VALVE_ON_OFF);
-			
-			if (flags.read(F_VALVE_ON_OFF))
-			{
-				digital_pin_relay.write(ON_OUT);
-			}
-			else
-			{
-				digital_pin_relay.write(OFF_OUT);
-			}
-		}
+// 		if (valve_state)
+// 		{
+// 			if (flags.read(F_VALVE_ON_OFF))
+// 			{
+// 				digital_pin_relay.write(ON_OUT);
+// 			} 
+// 			else
+// 			{
+// 				digital_pin_relay.write(OFF_OUT);
+// 			}
+// 		} 
+// 		else
+// 		{
+// 			flags.clear(F_VALVE_ON_OFF);
+// 			
+// 			if (flags.read(F_VALVE_ON_OFF))
+// 			{
+// 				digital_pin_relay.write(ON_OUT);
+// 			}
+// 			else
+// 			{
+// 				digital_pin_relay.write(OFF_OUT);
+// 			}
+// 		}
 	}
 		
 	QueueMain.push_back(taskControllTemperature);
@@ -1638,6 +1660,36 @@ void valveOn(void)
 	flags.set(F_VALVE_ON_OFF);
 	//flags.clear(F_TEMP_OUT_OF_RANGE);
 	flags.clear(FLAG_FIRST_USE_VALVE_ON);
+}
+
+void taskValveControllService(void)
+{
+	if (valve_state)
+	{
+		if (flags.read(F_VALVE_ON_OFF))
+		{
+			digital_pin_relay.write(ON_OUT);
+		}
+		else
+		{
+			digital_pin_relay.write(OFF_OUT);
+		}
+	}
+	else
+	{
+		flags.clear(F_VALVE_ON_OFF);
+		
+		if (flags.read(F_VALVE_ON_OFF))
+		{
+			digital_pin_relay.write(ON_OUT);
+		}
+		else
+		{
+			digital_pin_relay.write(OFF_OUT);
+		}
+	}
+	
+	QueueMain.push_back(taskValveControllService);
 }
 
 void taskEncTick(void)
@@ -1821,28 +1873,19 @@ void task_Set_Voltage_RMVK(void)
 
 void task_compare_different_pressure(void)
 {
-	
 		*ptr_diff_press = *ptrPressure - *ptr_current_press_main_fixed;
 		
 		if (*ptr_tmp_diff_press != *ptr_diff_press)
 		{
 			*ptr_temp_correct_fixed_by_press = ((((*ptr_diff_press - *ptr_tmp_diff_press)) * 0.034) * 100) /100;
-		
-			current_temp_main_fixed = current_temp_main_fixed + (*ptr_temp_correct_fixed_by_press);
-				
-			*ptr_tmp_diff_press = *ptr_diff_press;
-			
+			current_temp_main_fixed = current_temp_main_fixed + (*ptr_temp_correct_fixed_by_press);	
+			*ptr_tmp_diff_press = *ptr_diff_press;	
 		}
 		
 		if (press_temp_state)
 		{
-		
-			//SetTimerTask(task_compare_different_pressure,100);
-			
 			QueueMain.push_back(task_compare_different_pressure);
-		
 		}
-	
 }
 
 
