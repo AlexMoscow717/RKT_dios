@@ -43,6 +43,15 @@
 ///////////////////////////FLAGS////////////////////////////////////////////////////////
 
 
+///////////////////////STATES SYSTEM CONTROL TEMP///////////////////////////////
+#define STATE_1	192
+#define STATE_2	64
+#define STATE_3	96
+#define STATE_4	16
+#define STATE_5	144
+#define STATE_6	128
+#define STATE_7	48
+///////////////////////STATES SYSTEM CONTROL TEMP///////////////////////////////
 
 
 //#define F_SD_CARD_ON_OFF_LOGGING 13
@@ -188,6 +197,10 @@ float valueEnc = 25;
 float current_temp_main_fixed = 0;
 float current_press_main_fixed = 0;
 float tmp_diff_press = 0;
+boolean pUF = false;
+boolean cUF = false;
+boolean pOTRLD = false;
+boolean cOTRLD = false;
 
 
 
@@ -332,7 +345,7 @@ BitPack <20> flags;
 time_clock_main time_local;
 
 struct time_clock_main* ptr_struct_time = &time_local;
-
+byte state_temp_control_management = 0;
 
 
 // ISR(TIMER2_A)
@@ -1614,6 +1627,95 @@ void taskControllTemperature(void)
 				
 		}
 		
+		
+		
+		
+		
+// 		if (*ptrValueEnc <= current_temp_main_fixed)
+// 		{
+// 			
+// 			pUF = true;
+// 			cUF = true;
+// 			pOTRLD = false;
+// 			cOTRLD = false;
+// 			state_temp_control_management = STATE_1;
+// 		}
+// 		 
+// 		if ((*ptrValueEnc >= current_temp_main_fixed) && (*ptrValueEnc < threshold) && (pOTRLD == 0))
+// 		{
+// 			pUF = true;
+// 			cUF = false;
+// 			pOTRLD = false;
+// 			cOTRLD = false;
+// 			state_temp_control_management = STATE_2;
+// 		}
+// 		
+// 		if ((*ptrValueEnc >= threshold) && (pOTRLD == 0))
+// 		{
+// 			pUF = true;
+// 			cUF = false;
+// 			pOTRLD = false;
+// 			cOTRLD = true;
+// 			state_temp_control_management = STATE_3;
+// 		}
+// 		
+// 		if ((*ptrValueEnc < threshold) && (*ptrValueEnc >= current_temp_main_fixed) && (pOTRLD != 0))
+// 		{
+// 			pUF = false;
+// 			cUF = false;
+// 			pOTRLD = true;
+// 			cOTRLD = false;
+// 			state_temp_control_management = STATE_4;
+// 		}
+// 		
+// 		if ((*ptrValueEnc < current_temp_main_fixed) && (pOTRLD != 0))
+// 		{
+// 			pUF = false;
+// 			cUF = true;
+// 			pOTRLD = true;
+// 			cOTRLD = false;
+// 			state_temp_control_management = STATE_5;
+// 		}
+// 		
+// 		if ((*ptrValueEnc < current_temp_main_fixed) && (pOTRLD == 0))
+// 		{
+// 			pUF = false;
+// 			cUF = true;
+// 			pOTRLD = false;
+// 			cOTRLD = false;
+// 			state_temp_control_management = STATE_6;
+// 		}
+// 		
+// 		if ((*ptrValueEnc >= threshold) && (pOTRLD != 0))
+// 		{
+// 			pUF = false;
+// 			cUF = false;
+// 			pOTRLD = true;
+// 			cOTRLD = true;
+// 			state_temp_control_management = STATE_7;
+// 		}
+// 		
+// 		
+// 		switch (state_temp_control_management)
+// 		{
+// 		case STATE_1:	flags.set(F_VALVE_ON_OFF);
+// 						
+// 			break;
+// 		case STATE_2:
+// 			break;
+// 		case STATE_3:	flags.clear(F_VALVE_ON_OFF);
+// 			break;
+// 		case STATE_4:
+// 			break;
+// 		case STATE_5:	tDelayOpenValve.setTimerMode();
+// 						tDelayOpenValve.setTime(delay_open_valve);
+// 						tDelayOpenValve.start();
+// 			break;
+// 		case STATE_6:
+// 			break;
+// 		case STATE_7:
+// 			break;			
+// 		}
 		
 // 		if (valve_state)
 // 		{
